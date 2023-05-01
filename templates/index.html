@@ -1,0 +1,65 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="content" style="font-family: 'Courier New', monospace;
+color: #7F7F7F; /* gray color */
+background-color: #EFEFEF; /* light gray background */
+padding: 20px;
+border: 1px solid #CCC;
+border-radius: 5px;">
+  <h1 style="font-size: 36px;
+text-transform: uppercase;
+letter-spacing: 2px;
+margin-bottom: 20px;">
+    {{title}}
+  </h1>
+  <p style="font-size: 18px;
+line-height: 1.5;
+margin-bottom: 20px;">
+    {{description}}
+  </p>
+  <table style="width: 100%; border-collapse: collapse;">
+    <form id="upload-form" action="/upload" method="post" enctype="multipart/form-data">
+      <tr>
+        <td>
+          <input type="file" name="file" value="Please choose an image">
+        </td>
+        <td>
+          <label for="lsource_url">Or an URL to image on internet</label>
+          <input type="text" id="lsource_url" name="source_url">
+        </td>
+        <td><button type="submit" class="btnRegister upload-button" >Upload Image</button></td>
+      </tr>
+      <tr class="response-row" style="display:none;">
+        <td colspan="3">
+          <div class="spinner-border" role="status">
+            <span class="visually-hidden">Loading... Probably take around 1 minute to finish</span>
+          </div>
+        </td>
+      </tr>
+      {% if file_name == 'image.png' %}
+      <tr>
+        <td colspan="3">
+          <img src="{{url_for('static', filename=file_name)}}" width="800" height="800">
+        </td>
+      </tr>
+      {% endif %}
+    </form>
+    <script>
+      // get the form element
+      const form = document.getElementById('upload-form');
+      // add an event listener for form submission
+      form.addEventListener('submit', function () {
+        // get the source_url input value
+        const source_url = document.getElementById('lsource_url').value;
+        // add the source_url as a URL parameter to the form action
+        form.action = '/upload?source_url=' + encodeURIComponent(source_url);
+        // hide the upload button and show the spinner
+        const uploadButton = document.querySelector('.upload-button');
+        uploadButton.setAttribute('disabled', true);
+        const spinnerRow = document.querySelector('.response-row');
+        spinnerRow.style.display = 'table-row';
+      });
+    </script>
+  </table>
+</div>
+{% endblock %}
